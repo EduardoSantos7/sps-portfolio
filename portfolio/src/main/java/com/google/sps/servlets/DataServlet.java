@@ -23,10 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet that returns some example content. TODO: modify this file to handle
- * comments data
- */
+/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
@@ -35,17 +32,20 @@ public class DataServlet extends HttpServlet {
   @Override
   public void init() {
     comments = new ArrayList<>();
-    comments.add("A ship in port is safe, but that is not what ships are for. "
-        + "Sail out to sea and do new things. - Grace Hopper");
+    comments.add(
+        "A ship in port is safe, but that is not what ships are for. "
+            + "Sail out to sea and do new things. - Grace Hopper");
     comments.add("They told me computers could only do arithmetic. - Grace Hopper");
     comments.add("A ship in port is safe, but that's not what ships are built for. - Grace Hopper");
     comments.add("It is much easier to apologise than it is to get permission. - Grace Hopper");
     comments.add("If you can't give me poetry, can't you give me poetical science? - Ada Lovelace");
     comments.add("I am in a charming state of confusion. - Ada Lovelace");
-    comments.add("The Analytical Engine weaves algebraic patterns, "
-        + "just as the Jacquard loom weaves flowers and leaves. - Ada Lovelace");
-    comments.add("Sometimes it is the people no one can imagine anything of "
-        + "who do the things no one can imagine. - Alan Turing");
+    comments.add(
+        "The Analytical Engine weaves algebraic patterns, "
+            + "just as the Jacquard loom weaves flowers and leaves. - Ada Lovelace");
+    comments.add(
+        "Sometimes it is the people no one can imagine anything of "
+            + "who do the things no one can imagine. - Alan Turing");
     comments.add("Those who can imagine anything, can create the impossible. - Alan Turing");
   }
 
@@ -54,7 +54,7 @@ public class DataServlet extends HttpServlet {
     Gson gson = new Gson();
 
     String json = gson.toJson(comments);
-
+    
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
@@ -68,8 +68,8 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * @return the request parameter, or the default value if the parameter was not
-   *         specified by the client
+   * @return the request parameter, or the default value if the parameter
+   *         was not specified by the client
    */
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
