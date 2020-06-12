@@ -30,10 +30,6 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.sps.classes.Comment;
 
-/**
- * Servlet that returns some example content. TODO: modify this file to handle
- * comments data
- */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
@@ -44,14 +40,15 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
+    // This loop read the list of comments stored in the DB
+    // and create a Comment object for each entry.
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
       String author = (String) entity.getProperty("author");
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment comment = new Comment(id, author, text, timestamp);
+      Comment comment = new Comment(author, text, timestamp);
       comments.add(comment);
     }
 
