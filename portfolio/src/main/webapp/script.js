@@ -15,10 +15,25 @@ async function getData() {
 function addComment(comment) {
     container = document.getElementById("showData");
     div = document.createElement("div");
-    span = document.createElement("span");
-    span.textContent = "Author: " + comment.author;
-    text = document.createTextNode(comment.text);
-    div.appendChild(span);
-    div.appendChild(text);
+    div.className = "card m-1";
+    div.style = "width: 18rem;";
+    body = document.createElement("div");
+    body.className = "card-body";
+    title = document.createElement("h5");
+    title.className = "card-title";
+    title.innerHTML = comment.author;
+    subTitle = document.createElement("h5");
+    subTitle.className = "card-subtitle mb-2 text-muted";
+    var date = new Date(comment.timestamp);
+    subTitle.innerHTML = date.toLocaleString();
+    p = document.createElement("p");
+    p.className = "card-text";
+    p.innerHTML = comment.text;
+
+    body.appendChild(title);
+    body.appendChild(subTitle);
+    body.appendChild(subTitle);
+    body.appendChild(p);
+    div.appendChild(body);
     container.appendChild(div);
 }
