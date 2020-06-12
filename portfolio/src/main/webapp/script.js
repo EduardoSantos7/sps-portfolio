@@ -4,6 +4,21 @@
  */
 async function getData() {
     const response = await fetch("/data");
-    const quote = await response.text();
-    document.getElementById("showData").innerText = quote;
+    const data = await response.json();
+    if (!data) return;
+
+    data.forEach((comment) => {
+        addComment(comment);
+    });
+}
+
+function addComment(comment) {
+    container = document.getElementById("showData");
+    div = document.createElement("div");
+    span = document.createElement("span");
+    span.textContent = "Author: " + comment.author;
+    text = document.createTextNode(comment.text);
+    div.appendChild(span);
+    div.appendChild(text);
+    container.appendChild(div);
 }

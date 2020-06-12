@@ -22,54 +22,68 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.sps.classes.Comment;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/**
+ * Servlet that returns some example content. TODO: modify this file to handle
+ * comments data
+ */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<String> comments;
-
-  @Override
-  public void init() {
-    comments = new ArrayList<>();
-    comments.add(
-        "A ship in port is safe, but that is not what ships are for. "
-            + "Sail out to sea and do new things. - Grace Hopper");
-    comments.add("They told me computers could only do arithmetic. - Grace Hopper");
-    comments.add("A ship in port is safe, but that's not what ships are built for. - Grace Hopper");
-    comments.add("It is much easier to apologise than it is to get permission. - Grace Hopper");
-    comments.add("If you can't give me poetry, can't you give me poetical science? - Ada Lovelace");
-    comments.add("I am in a charming state of confusion. - Ada Lovelace");
-    comments.add(
-        "The Analytical Engine weaves algebraic patterns, "
-            + "just as the Jacquard loom weaves flowers and leaves. - Ada Lovelace");
-    comments.add(
-        "Sometimes it is the people no one can imagine anything of "
-            + "who do the things no one can imagine. - Alan Turing");
-    comments.add("Those who can imagine anything, can create the impossible. - Alan Turing");
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("Comments").addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    List<Comment> comments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String author = (String) entity.getProperty("author");
+      String text = (String) entity.getProperty("text");
+      long timestamp = (long) entity.getProperty("timestamp");
+
+      Comment comment = new Comment(id, author, text, timestamp);
+      comments.add(comment);
+    }
+
     Gson gson = new Gson();
 
-    String json = gson.toJson(comments);
-    
     response.setContentType("application/json;");
-    response.getWriter().println(json);
+    response.getWriter().println(gson.toJson(comments));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String text = getParameter(request, "text-input", "");
-    text = text.toUpperCase();
+    String author = getParameter(request, "author", "");
+    long timestamp = System.currentTimeMillis();
+
+    Entity taskEntity = new Entity("Comments");
+    taskEntity.setProperty("author", author);
+    taskEntity.setProperty("text", text);
+    taskEntity.setProperty("timestamp", timestamp);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(taskEntity);
+
+    response.sendRedirect("/index.html");
+
     System.out.println(text);
   }
 
   /**
-   * @return the request parameter, or the default value if the parameter
-   *         was not specified by the client
+   * @return the request parameter, or the default value if the parameter was not
+   *         specified by the client
    */
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
