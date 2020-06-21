@@ -5,7 +5,7 @@
     <meta name="author" content="Eduardo Santos">
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-    <title>About me Test</title>
+    <title>About me</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" >
@@ -213,6 +213,20 @@
               </div>
 
             </form>
+
+            <form>
+              <div class="form-group">
+                <label for="exampleFormControlSelect2">Select a language:</label>
+                <select multiple class="form-control" id="lanSelector">
+                  <option value="es">Spanish</option>
+                  <option value="ar">Arabic</option>
+                  <option value="zh">Chinese</option>
+                  <option value="de">German</option>
+                </select>
+              </div>
+            </form>
+            <button class='btn btn-primary mt-2' onclick="getTranslation()"> Translate </button>
+
           </div>
           <div id="showData" class="col-md-6">
           </div>

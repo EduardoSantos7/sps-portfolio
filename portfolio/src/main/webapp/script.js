@@ -12,6 +12,28 @@ async function getData() {
     });
 }
 
+async function getTranslation() {
+    const comments = document.getElementsByClassName("card-text comment")
+    const selector = document.getElementById("lanSelector")
+    const code = selector.options[selector.selectedIndex].value;
+    console.log(comments)
+
+    for (const comment of comments) {
+        const params = new URLSearchParams();
+        params.append('text', comment.innerHTML);
+        params.append('languageCode', code);
+
+        fetch('/translate', {
+                method: 'POST',
+                body: params
+            }).then(response => response.text())
+            .then((translatedMessage) => {
+                console.log(translatedMessage);
+                comment.innerHTML = translatedMessage;
+            });
+    }
+}
+
 function addComment(comment) {
     container = document.getElementById("showData");
     div = document.createElement("div");
@@ -27,7 +49,7 @@ function addComment(comment) {
     var date = new Date(comment.timestamp);
     subTitle.innerHTML = date.toLocaleString();
     p = document.createElement("p");
-    p.className = "card-text";
+    p.className = "card-text comment";
     p.innerHTML = comment.text;
 
     body.appendChild(title);
